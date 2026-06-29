@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Boat — Leads</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0 }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1a0b; color: #e8e4dc; min-height: 100vh; padding: 2rem }
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem }
+  .logo { font-size: 18px; font-weight: 600; letter-spacing: .08em; color: #C9A84C }
+  .logo span { color: #6b9e7e; font-weight: 400 }
+  .stats { display: flex; gap: 1.5rem; align-items: center }
+  .stat { text-align: center }
+  .stat-n { font-size: 28px; font-weight: 700; color: #C9A84C; line-height: 1 }
+  .stat-l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #6b9e7e; margin-top: 2px }
+  .actions { display: flex; gap: .75rem }
+  button { border: none; cursor: pointer; padding: 9px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: opacity .15s }
+  button:hover { opacity: .85 }
+  .btn-export { background: #C9A84C; color: #0d1a0b }
+  .btn-reload { background: rgba(255,255,255,.08); color: #e8e4dc; border: 1px solid rgba(255,255,255,.1) }
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid rgba(255,255,255,.08) }
+  table { width: 100%; border-collapse: collapse; font-size: 14px }
+  th { background: rgba(201,168,76,.1); color: #C9A84C; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 12px 16px; text-align: left; font-weight: 600 }
+  td { padding: 13px 16px; border-top: 1px solid rgba(255,255,255,.05); color: #ccc; vertical-align: middle }
+  tr:hover td { background: rgba(255,255,255,.03) }
+  .num { color: #6b9e7e; font-size: 12px; width: 40px }
+  .name { color: #e8e4dc; font-weight: 500 }
+  .phone a { color: #C9A84C; text-decoration: none }
+  .phone a:hover { text-decoration: underline }
+  .date { font-size: 12px; color: #6b9e7e }
+  .empty { text-align: center; padding: 4rem; color: #6b9e7e }
+  .loading { text-align: center; padding: 4rem; color: #6b9e7e }
+  .error { text-align: center; padding: 4rem; color: #ff6b6b }
+  .updated { font-size: 11px; color: #6b9e7e }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">GREEN BOAT <span>· Expedição 2026</span></div>
+    <div class="updated" id="updated"></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" id="count">—</div><div class="stat-l">Leads</div></div>
+    <div class="stat"><div class="stat-n" style="color:#6b9e7e">16</div><div class="stat-l">Vagas</div></div>
+  </div>
+  <div class="actions">
+    <button class="btn-reload" onclick="load()">↻ Atualizar</button>
+    <button class="btn-export" onclick="exportCSV()">⬇ Exportar CSV</button>
+  </div>
+</header>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>WhatsApp</th>
+        <th>Data / Hora</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="4" class="loading">Carregando leads…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  var leadsData = [];
+
+  function fmt(iso) {
+    var d = new Date(iso);
+    return d.toLocaleDateString('pt-BR') + ' · ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function load() {
+    document.getElementById('tbody').innerHTML = '<tr><td colspan="4" class="loading">Carregando…</td></tr>';
+    fetch('/api/leads')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        leadsData = data;
+        document.getElementById('count').textContent = data.length;
+        document.getElementById('updated').textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        if (!data.length) {
+          document.getElementById('tbody').innerHTML = '<tr><td colspan="4" class="empty">Nenhum lead ainda.</td></tr>';
+          return;
+        }
+
+        var rows = data.map(function(l, i) {
+          var phone = l.phone.replace(/\D/g, '');
+          var waLink = 'https://wa.me/55' + phone;
+          return '<tr>' +
+            '<td class="num">' + (i + 1) + '</td>' +
+            '<td class="name">' + esc(l.name) + '</td>' +
+            '<td class="phone"><a href="' + waLink + '" target="_blank">' + esc(l.phone) + '</a></td>' +
+            '<td class="date">' + fmt(l.timestamp) + '</td>' +
+            '</tr>';
+        }).join('');
+        document.getElementById('tbody').innerHTML = rows;
+      })
+      .catch(function() {
+        document.getElementById('tbody').innerHTML = '<tr><td colspan="4" class="error">Erro ao carregar leads.</td></tr>';
+      });
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function exportCSV() {
+    if (!leadsData.length) return alert('Nenhum lead para exportar.');
+    var rows = [['#','Nome','WhatsApp','Data']];
+    leadsData.forEach(function(l, i) {
+      rows.push([i+1, l.name, l.phone, new Date(l.timestamp).toLocaleString('pt-BR')]);
+    });
+    var csv = rows.map(function(r) { return r.map(function(c) { return '"' + String(c).replace(/"/g,'""') + '"'; }).join(','); }).join('\n');
+    var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'leads-green-boat-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+  }
+
+  load();
+  setInterval(load, 60000);
+</script>
+</body>
+</html>

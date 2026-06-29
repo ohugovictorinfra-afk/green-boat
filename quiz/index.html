@@ -649,6 +649,7 @@
             var name  = document.getElementById('lead-name').value.trim();
             var phone = document.getElementById('lead-phone').value.trim();
             var errorEl = document.getElementById('form-error');
+            var btn = document.querySelector('#scr-capture .btn-primary');
 
             if (!name || !phone) {
                 errorEl.textContent = 'Preencha todos os campos para liberar seu diagnostico.';
@@ -656,13 +657,22 @@
                 return;
             }
             errorEl.style.display = 'none';
+            if (btn) { btn.disabled = true; btn.textContent = 'Salvando…'; }
 
-            document.getElementById('user-name-pitch').innerText = name;
-            document.getElementById('user-name-pitch-final').innerText = name;
-
-            document.getElementById('scr-capture').classList.remove('active');
-            document.getElementById('scr-pitch').classList.add('active');
-            document.getElementById('sticky-cta-box').classList.add('active');
+            fetch('/api/capture', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, phone: phone })
+            })
+            .catch(function() { /* segue mesmo se falhar */ })
+            .finally(function() {
+                if (btn) { btn.disabled = false; btn.textContent = 'Liberar Diagnóstico'; }
+                document.getElementById('user-name-pitch').innerText = name;
+                document.getElementById('user-name-pitch-final').innerText = name;
+                document.getElementById('scr-capture').classList.remove('active');
+                document.getElementById('scr-pitch').classList.add('active');
+                document.getElementById('sticky-cta-box').classList.add('active');
+            });
         }
 
         function goToTarget() {

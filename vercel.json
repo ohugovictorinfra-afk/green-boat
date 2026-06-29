@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "functions": {
+    "api/capture.js": { "runtime": "@vercel/node@3" },
+    "api/leads.js":   { "runtime": "@vercel/node@3" }
+  }
+}
