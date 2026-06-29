@@ -1,0 +1,632 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Green Boat — Manaus a Alter do Chão · Expedição Setembro 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;background:#fff;font-size:16px;line-height:1.7}
+.label{font-size:11px;letter-spacing:.12em;color:#C9A84C;font-weight:600;text-transform:uppercase;margin-bottom:.75rem;display:block}
+h1,h2,h3{font-weight:500;line-height:1.3}
+p{line-height:1.75}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+nav{background:#1B4332;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+.nav-logo{color:#F5F0E8;font-size:15px;font-weight:600;letter-spacing:.05em}
+.nav-logo span{color:#C9A84C}
+.nav-cta{background:#C9A84C;color:#1B4332;border:none;padding:10px 22px;font-size:13px;font-weight:600;border-radius:6px;cursor:pointer}
+
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('imgs/img01.webp');background-size:cover;background-position:center;filter:brightness(.65)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(27,67,50,.3) 0%,rgba(27,67,50,.75) 100%)}
+.hero-content{position:relative;z-index:2;padding:3rem 2rem;max-width:780px;margin:0 auto}
+.hero h1{font-size:40px;color:#F5F0E8;line-height:1.2;margin-bottom:1rem;font-family:Georgia,serif;font-weight:400}
+.hero-sub{font-size:17px;color:#c8dfd0;line-height:1.75;max-width:560px;margin:0 auto 2.5rem}
+.hero-bar{display:flex;justify-content:center;gap:2.5rem;flex-wrap:wrap;padding:1.25rem 2rem;background:rgba(22,53,39,.85);border-radius:10px;max-width:640px;margin:0 auto 2.5rem;border:1px solid rgba(201,168,76,.2);backdrop-filter:blur(4px)}
+.hero-bar div{text-align:center}
+.hero-bar .val{font-size:15px;font-weight:600;color:#F5F0E8;display:block}
+.hero-bar .lbl{font-size:10px;color:#6B9E7E;letter-spacing:.06em;text-transform:uppercase}
+.btn-primary{background:#C9A84C;color:#1B4332;border:none;padding:15px 36px;font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;margin:0 6px}
+.btn-outline{background:transparent;color:#F5F0E8;border:2px solid #C9A84C;padding:13px 28px;font-size:15px;font-weight:500;border-radius:6px;cursor:pointer;margin:0 6px}
+
+.sec{padding:4rem 2rem;max-width:900px;margin:0 auto}
+.sec-wide{padding:4rem 2rem}
+.sec-wide .inner{max-width:900px;margin:0 auto}
+.sec h2{font-size:26px;margin-bottom:1.25rem;font-family:Georgia,serif;font-weight:400}
+.sec p,.sec-wide p{font-size:15px;color:#444;line-height:1.8;margin-bottom:1rem}
+.sec p strong{color:#1a1a1a;font-weight:600}
+.bg-dark{background:#1B4332}
+.bg-gray{background:#f7f5f0}
+.bg-cream{background:#fdf9f3}
+
+.problema{background:#f7f5f0;padding:4rem 2rem}
+.problema .inner{max-width:760px;margin:0 auto}
+.problema h2{font-size:24px;font-family:Georgia,serif;font-weight:400;color:#1B4332;margin-bottom:1.25rem}
+
+.oportunidade{background:#1B4332;padding:5rem 2rem;text-align:center}
+.oportunidade .inner{max-width:680px;margin:0 auto}
+.oportunidade h2{font-size:28px;color:#F5F0E8;font-family:Georgia,serif;font-weight:400;margin-bottom:1.5rem}
+.oportunidade p{color:#A8C5B0;font-size:15px;line-height:1.8;margin-bottom:1rem}
+
+.foto-full{width:100%;height:420px;object-fit:cover;display:block}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:1.5rem}
+.card{background:#fff;border:1px solid #e8e4dc;border-radius:10px;padding:1.5rem;border-top:3px solid #C9A84C}
+.card h3{font-size:15px;font-weight:600;color:#1B4332;margin-bottom:.6rem}
+.card p{font-size:14px;color:#666;line-height:1.65;margin:0}
+
+/* MAPA */
+.mapa-sec{background:#1B4332;padding:3rem 2rem;text-align:center}
+.mapa-sec .inner{max-width:820px;margin:0 auto}
+.mapa-sec h3{color:#C9A84C;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem}
+
+/* ROTEIRO */
+.roteiro-item{background:#fff;border:1px solid #e8e4dc;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.roteiro-header{display:flex;align-items:center;gap:1rem;padding:1.25rem 1.5rem;border-bottom:1px solid #f0ece4}
+.dia-badge{background:#1B4332;color:#C9A84C;font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;white-space:nowrap;letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
+.roteiro-header h3{font-size:15px;font-weight:600;color:#1B4332;margin:0}
+.roteiro-desc{padding:.75rem 1.5rem 1.25rem;font-size:14px;color:#555;line-height:1.7}
+.roteiro-fotos{display:grid;gap:3px}
+.roteiro-fotos.cols-1 img{width:100%;height:280px;object-fit:cover}
+.roteiro-fotos.cols-2{grid-template-columns:1fr 1fr}
+.roteiro-fotos.cols-2 img{width:100%;height:260px;object-fit:cover}
+.foto-caption{font-size:11px;color:#888;padding:.4rem .75rem;background:#fafafa;border-top:1px solid #f0ece4;text-align:center;font-style:italic}
+
+/* BARCO */
+.barco-sec{background:#1B4332;padding:5rem 2rem}
+.barco-hero{max-width:960px;margin:0 auto 3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.barco-img{border-radius:12px;overflow:hidden;height:380px;object-fit:cover;width:100%}
+.barco-texto h2{font-size:26px;color:#F5F0E8;font-family:Georgia,serif;font-weight:400;margin-bottom:1rem}
+.barco-texto p{color:#A8C5B0;font-size:15px;line-height:1.8;margin-bottom:1rem}
+.barco-specs{margin-top:1.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.spec{background:#163527;border:1px solid #2D5A42;border-radius:8px;padding:.75rem 1rem}
+.spec .s-label{font-size:10px;color:#6B9E7E;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:2px}
+.spec .s-val{font-size:14px;font-weight:600;color:#F5F0E8}
+.galeria-title{max-width:960px;margin:0 auto 1.25rem;color:#C9A84C;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.galeria-barco{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.galeria-item{position:relative;overflow:hidden;border-radius:8px;cursor:pointer}
+.galeria-item img{width:100%;height:160px;object-fit:cover;transition:transform .3s}
+.galeria-item:hover img{transform:scale(1.05)}
+.galeria-legenda{position:absolute;bottom:0;left:0;right:0;background:rgba(27,67,50,.85);color:#C9A84C;font-size:10px;font-weight:600;text-align:center;padding:6px 4px;letter-spacing:.06em;text-transform:uppercase}
+
+/* INCLUSO */
+.incluso-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:1.5rem}
+.incluso-col h3{font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid #e8e4dc}
+.incluso-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:.6rem;font-size:14px;color:#444;line-height:1.5}
+.check-icon{color:#3B6D11;font-weight:700;flex-shrink:0;margin-top:1px}
+.x-icon{color:#c0392b;font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* DEPOIMENTOS */
+.depo-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:1.5rem}
+.depo-card{background:#fff;border:1px solid #e8e4dc;border-radius:10px;padding:1.5rem}
+.depo-texto{font-size:14px;color:#444;line-height:1.75;margin-bottom:1.25rem;font-style:italic}
+.depo-pessoa{display:flex;align-items:center;gap:.75rem}
+.depo-foto{width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #e8e4dc}
+.depo-nome{font-size:13px;font-weight:600;color:#1B4332}
+.depo-cargo{font-size:11px;color:#888}
+
+/* PREÇO */
+.preco-sec{background:#1B4332;padding:5rem 2rem;text-align:center}
+.preco-sec h2{color:#F5F0E8;font-size:26px;font-family:Georgia,serif;font-weight:400;margin-bottom:.5rem}
+.preco-sec .sub{color:#A8C5B0;font-size:14px;margin-bottom:2rem}
+.preco-note{font-size:12px;color:#6B9E7E;margin-bottom:1.5rem}
+.garantia-box{background:#163527;border:1px solid #2D5A42;border-radius:8px;padding:1.25rem;margin-top:1.5rem;text-align:left}
+.garantia-box .g-title{font-size:13px;font-weight:600;color:#C9A84C;margin-bottom:.4rem}
+.garantia-box p{font-size:13px;color:#A8C5B0;line-height:1.6;margin:0}
+.cabine-bloco{background:#163527;border:1px solid #2D5A42;border-radius:12px;padding:1.75rem;text-align:left;margin-bottom:14px}
+.cabine-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid #2D5A42}
+.cabine-titulo{font-size:13px;font-weight:700;color:#F5F0E8;text-transform:uppercase;letter-spacing:.08em}
+.cabine-subtitulo{font-size:11px;color:#6B9E7E;margin-top:3px}
+.cabine-preco-cheio{text-align:right}
+.label-cheio{font-size:10px;color:#6B9E7E;text-transform:uppercase;letter-spacing:.06em;display:block}
+.val-cheio{font-size:22px;font-weight:700;color:#C9A84C}
+.opcoes-pag{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opcao-pag{background:#1B4332;border:1px solid #2D5A42;border-radius:8px;padding:1.25rem 1rem;text-align:center;position:relative;overflow:hidden}
+.opcao-pag.destaque-op{border-color:#C9A84C}
+.badge-recomendado{display:block;background:#C9A84C;color:#1B4332;font-size:8px;font-weight:800;padding:3px 0;text-align:center;margin:-1.25rem -1rem .9rem;letter-spacing:.08em;text-transform:uppercase}
+.op-label{font-size:10px;color:#6B9E7E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;display:block;line-height:1.4;white-space:nowrap}
+.op-destaque{font-size:18px;font-weight:700;color:#C9A84C;line-height:1.2;margin-bottom:.35rem;white-space:nowrap}
+.op-detalhe{font-size:11px;color:#A8C5B0;line-height:1.6}
+
+/* FUNDADOR */
+.origem{background:#1B4332;padding:5rem 2rem}
+.origem .inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:3rem;align-items:center}
+.origem-img{border-radius:12px;width:100%;height:440px;object-fit:cover;object-position:top}
+.origem-texto h2{font-size:26px;color:#F5F0E8;font-family:Georgia,serif;font-weight:400;margin-bottom:1.25rem}
+.origem-texto p{color:#A8C5B0;font-size:15px;line-height:1.8;margin-bottom:1rem}
+.fundador-bio{background:#163527;border:1px solid #2D5A42;border-radius:10px;padding:1.25rem;margin-top:1.5rem}
+.fundador-bio .name{font-size:15px;font-weight:600;color:#F5F0E8;margin-bottom:.4rem}
+.fundador-bio .bio{font-size:13px;color:#A8C5B0;line-height:1.6}
+
+.visao-sec{background:#fdf9f3;padding:5rem 2rem;text-align:center}
+.visao-sec .inner{max-width:660px;margin:0 auto}
+.visao-sec h2{font-size:26px;font-family:Georgia,serif;font-weight:400;color:#1B4332;margin-bottom:1rem}
+.visao-sec p{font-size:15px;color:#3D5A47;line-height:1.8;margin-bottom:.75rem}
+.visao-sec .destaque{font-size:17px;font-weight:600;color:#1B4332;margin-top:1.5rem}
+
+.obj-item{background:#fff;border:1px solid #e8e4dc;border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:12px}
+.obj-q{font-size:15px;font-weight:600;color:#1B4332;margin-bottom:.5rem}
+.obj-a{font-size:14px;color:#555;line-height:1.65;margin:0}
+.faq-item{border-bottom:1px solid #e8e4dc;padding:1.25rem 0}
+.faq-item:last-child{border-bottom:none}
+.faq-q{font-size:15px;font-weight:600;color:#1B4332;margin-bottom:.4rem}
+.faq-a{font-size:14px;color:#555;line-height:1.65}
+
+.voos-box{background:#f7f5f0;border-radius:10px;padding:1.25rem 1.5rem;margin-top:1.5rem;border-left:4px solid #C9A84C}
+.voos-box p{font-size:14px;color:#555;margin:0}
+.voos-box strong{color:#1B4332}
+
+.footer-sec{background:#1B4332;padding:3.5rem 2rem;text-align:center}
+.footer-sec h3{color:#F5F0E8;font-size:18px;font-weight:600;margin-bottom:.25rem}
+.footer-sec .foot-sub{color:#A8C5B0;font-size:14px;margin-bottom:2rem}
+.footer-meta{font-size:11px;color:#6B9E7E;margin-top:1.5rem;line-height:1.8}
+.footer-links{display:flex;justify-content:center;gap:1.5rem;margin-top:1rem}
+.footer-links a{font-size:12px;color:#6B9E7E}
+
+.whatsapp-float{position:fixed;bottom:24px;right:24px;background:#25D366;color:#fff;border:none;width:56px;height:56px;border-radius:50%;font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+hr.divider{border:none;border-top:1px solid #e8e4dc}
+
+@media(max-width:700px){
+  .hero h1{font-size:26px}
+  .hero-bar{gap:1rem}
+  .foto-full{height:240px}
+  .incluso-grid{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:1fr}
+  .btn-primary,.btn-outline{display:block;width:100%;margin:6px 0}
+  .barco-hero{grid-template-columns:1fr}
+  .barco-img{height:240px}
+  .galeria-barco{grid-template-columns:repeat(2,1fr)}
+  .galeria-item img{height:120px}
+  .roteiro-fotos.cols-2{grid-template-columns:1fr}
+  .roteiro-fotos.cols-2 img{height:200px}
+  .origem .inner{grid-template-columns:1fr}
+  .origem-img{height:300px}
+  .depo-grid{grid-template-columns:1fr}
+  .opcoes-pag{grid-template-columns:1fr}
+  .cabine-header{flex-direction:column;gap:.5rem}
+  .cabine-preco-cheio{text-align:left}
+}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* FAQ accordion */
+.faq-q{cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;gap:1rem}
+.faq-q::after{content:'+';font-size:22px;color:#C9A84C;font-weight:300;transition:transform .3s;flex-shrink:0}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;padding-top:0}
+.faq-item.open .faq-a{max-height:300px;padding-top:.5rem}
+
+/* Botão hover */
+.btn-primary{transition:background .2s,transform .15s}
+.btn-primary:hover{background:#b8963e;transform:translateY(-1px)}
+.btn-outline{transition:background .2s,color .2s}
+.btn-outline:hover{background:rgba(201,168,76,.12)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">GREEN <span>BOAT</span></div>
+  <button class="nav-cta" onclick="document.querySelector('.preco-sec').scrollIntoView({behavior:'smooth'})">Quero minha vaga</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="label">Green Boat · Expedições Amazônicas</span>
+    <h1>Das águas negras de Manaus às praias brancas de Alter do Chão — pelo rio.</h1>
+    <p class="hero-sub">A bordo do Iana I, você atravessa o coração da Amazônia em 5 dias de expedição fluvial. Rio Negro, Rio Amazonas, Rio Tapajós — em sequência, sem atalho.</p>
+    <div class="hero-bar">
+      <div><span class="val">5 dias</span><span class="lbl">4 noites</span></div>
+      <div><span class="val">09 Set 2026</span><span class="lbl">Embarque Manaus</span></div>
+      <div><span class="val">16 vagas</span><span class="lbl">Iana I</span></div>
+      <div><span class="val">13 Set 2026</span><span class="lbl">Desembarque Santarém</span></div>
+    </div>
+    <button class="btn-primary" onclick="document.querySelector('.preco-sec').scrollIntoView({behavior:'smooth'})">Quero minha vaga</button>
+    <button class="btn-outline" onclick="window.open('https://wa.me/5511998356696','_blank')">Falar pelo WhatsApp</button>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="problema">
+  <div class="inner">
+    <span class="label">O problema</span>
+    <h2>Por que a maioria das viagens à Amazônia deixa uma sensação de que faltou algo</h2>
+    <p>Você foi. Viu o rio de longe. Fez o passeio de barco de duas horas. Comprou artesanato no mercado. E voltou com a sensação de que a Amazônia real ficou do outro lado da margem.</p>
+    <p>Não é culpa sua. O turismo convencional foi construído para ser seguro, rápido e fácil de vender. Hotéis na cidade, passeios de um dia, grupos grandes. Você vê a Amazônia como cenário — nunca entra nela de verdade.</p>
+    <p><strong>O que falta não é destino. É tempo dentro do rio.</strong> É dormir com o barulho da floresta. É chegar em lugares que não têm estrada — e que nunca vão ter.</p>
+  </div>
+</section>
+
+<!-- FOTO FULLWIDTH: IANA NA FLORESTA -->
+<img fetchpriority="high" src="imgs/img02.webp" alt="Iana I ao pôr do sol nas Anavilhanas" class="foto-full">
+
+<!-- OPORTUNIDADE -->
+<section class="oportunidade">
+  <div class="inner">
+    <span class="label">A expedição</span>
+    <h2>A primeira expedição fluvial ininterrupta de Manaus a Alter do Chão</h2>
+    <p>Nenhum roteiro comercial faz esse trajeto de ponta a ponta pelo rio. A Green Boat criou a primeira expedição que une Manaus e Alter do Chão em uma navegação contínua — sem pular trechos, sem atalhos de avião no meio do caminho.</p>
+    <p>São 5 dias a bordo do Iana I atravessando três dos rios mais extraordinários do planeta em sequência. Rio Negro. Rio Amazonas. Rio Tapajós. Cada um com uma cor, uma temperatura, uma personalidade diferente — e você vê a transição acontecer na sua frente.</p>
+    <p>No caminho, você não passa pelos lugares. Você entra neles. Aldeia indígena. Comunidade ribeirinha histórica. Floresta Nacional com guia local. Praias de rio que a maioria dos brasileiros nunca vai ver.</p>
+    <div style="margin-top:2.5rem">
+      <button class="btn-primary" onclick="document.querySelector('.preco-sec').scrollIntoView({behavior:'smooth'})">Quero minha vaga</button>
+      <button class="btn-outline" onclick="window.open('https://wa.me/5511998356696','_blank')">Falar pelo WhatsApp</button>
+    </div>
+  </div>
+</section>
+
+<!-- MAPA DA ROTA -->
+<section class="mapa-sec">
+  <div class="inner">
+    <h3>A rota da expedição</h3>
+    <img loading="lazy" src="imgs/img03.webp" style="width:100%;border-radius:12px;display:block" alt="Rota da Expedição — Manaus a Alter do Chão">
+  </div>
+</section>
+
+<!-- PARA QUEM -->
+<section class="sec">
+  <span class="label">Para quem é</span>
+  <h2>Quem vem nessa expedição</h2>
+  <div class="cards-grid">
+    <div class="card">
+      <h3>Quem quer a Amazônia de verdade</h3>
+      <p>Você já foi a destinos turísticos e voltou com a sensação de que faltou profundidade. Quer experiência real — não cenário.</p>
+    </div>
+    <div class="card">
+      <h3>Quem viaja para sentir, não para postar</h3>
+      <p>O que vai ficar na memória não é o que você publicou. É o silêncio de um igarapé, o céu aberto no Amazonas e a conversa com quem vive na floresta há gerações.</p>
+    </div>
+    <div class="card">
+      <h3>Quem entende que 16 vagas é o limite — não o marketing</h3>
+      <p>O Iana I tem capacidade para 16 passageiros. Não é exclusividade artificial. É o tamanho do barco — e é o que garante que a experiência funciona.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROTEIRO -->
+<section class="sec-wide bg-gray">
+  <div class="inner">
+    <span class="label">O roteiro</span>
+    <h2 style="font-size:26px;font-family:Georgia,serif;font-weight:400;margin-bottom:1.5rem">O que você vai viver nos 5 dias a bordo do Iana I</h2>
+
+    <!-- DIA 1 -->
+    <div class="roteiro-item">
+      <div class="roteiro-header">
+        <span class="dia-badge">Dia 1</span>
+        <h3>Manaus · Rio Negro · Comunidade Cipiá · Encontro das Águas</h3>
+      </div>
+      <div class="roteiro-fotos cols-2">
+        <div><img loading="lazy" src="imgs/img04.webp" alt="Cacique da Comunidade Indígena Cipiá" style="object-position:top"><div class="foto-caption">Cacique da Comunidade Indígena Cipiá — Rio Negro</div></div>
+        <div><img loading="lazy" src="imgs/img05.webp" alt="Encontro das Águas — Rio Negro e Rio Solimões"><div class="foto-caption">Encontro das Águas — Rio Negro encontra o Solimões</div></div>
+      </div>
+      <div class="roteiro-desc">Embarque ao amanhecer em Manaus. Primeira parada: Comunidade Indígena Cipiá — pintura corporal, danças rituais, trilha na mata com o cacique. Canoa pelo Igarapé do Topé e banho nas águas escuras do Rio Negro. À tarde, o Encontro das Águas observado do deck. À noite, o barco entra no Rio Amazonas.</div>
+    </div>
+
+    <!-- DIA 2 -->
+    <div class="roteiro-item">
+      <div class="roteiro-header">
+        <span class="dia-badge">Dia 2</span>
+        <h3>Rio Amazonas · Vila Amazônia · Navegação</h3>
+      </div>
+      <div class="roteiro-fotos cols-2">
+        <div><img loading="lazy" src="imgs/img06.webp" alt="Navegação noturna no Rio Amazonas"><div class="foto-caption">Navegação noturna — o Amazonas à noite</div></div>
+        <div><img loading="lazy" src="imgs/img07.webp" alt="Rio Amazonas de dia"><div class="foto-caption">O maior rio do mundo — horizonte aberto</div></div>
+      </div>
+      <div class="roteiro-desc">O dia amanhece no maior rio do mundo. Horizonte aberto, botos, aves nas margens. Parada na Vila Amazônia — comunidade fundada por imigrantes japoneses nos anos 1930. Almoço com produtos cultivados pela própria comunidade: pupunha, cupuaçu, castanha. Tarde de navegação contemplativa rumo a Santarém.</div>
+    </div>
+
+    <!-- DIA 3 -->
+    <div class="roteiro-item">
+      <div class="roteiro-header">
+        <span class="dia-badge">Dia 3</span>
+        <h3>Chegada a Alter do Chão · Tapajós · Luau na Praia</h3>
+      </div>
+      <div class="roteiro-fotos cols-2">
+        <div><img loading="lazy" src="imgs/img08.webp" alt="Alter do Chão — vida ribeirinha"><div class="foto-caption">Alter do Chão — vida ribeirinha no Tapajós</div></div>
+        <div><img loading="lazy" src="imgs/img09.webp" alt="Pôr do sol em Alter do Chão"><div class="foto-caption">Luau na praia — pôr do sol amazônico</div></div>
+      </div>
+      <div class="roteiro-desc">O encontro do Amazonas barrento com o Tapajós cristalino — fenômeno visual único. 30 km depois, Alter do Chão. Tarde na Ilha do Amor e no Lago Verde de canoa. À noite, fogueira na praia e jantar sob o céu estrelado.</div>
+    </div>
+
+    <!-- DIA 4 -->
+    <div class="roteiro-item">
+      <div class="roteiro-header">
+        <span class="dia-badge">Dia 4</span>
+        <h3>Floresta Nacional do Tapajós · Comunidade Jamaraquá</h3>
+      </div>
+      <div class="roteiro-fotos cols-1">
+        <div><img loading="lazy" src="imgs/img10.webp" alt="Trilha na Floresta Nacional do Tapajós"><div class="foto-caption">Trilha com guia local — Floresta Nacional do Tapajós</div></div>
+      </div>
+      <div class="roteiro-desc">Chegada à Comunidade Jamaraquá — referência nacional em turismo de base comunitária. Trilha entre Samaúmas centenárias, banho de igarapé no meio da floresta, almoço com peixe assado. Tarde livre em Alter do Chão.</div>
+    </div>
+
+    <!-- DIA 5 -->
+    <div class="roteiro-item">
+      <div class="roteiro-header">
+        <span class="dia-badge">Dia 5</span>
+        <h3>Rio Arapiuns · Santarém · Desembarque</h3>
+      </div>
+      <div class="roteiro-fotos cols-1">
+        <div><img loading="lazy" src="imgs/img01.webp" alt="Pôr do sol no Rio Arapiuns"><div class="foto-caption">Último amanhecer a bordo — Rio Arapiuns</div></div>
+      </div>
+      <div class="roteiro-desc">Último amanhecer a bordo. O barco entra no Rio Arapiuns — águas mais cristalinas que o Tapajós, praias praticamente desertas. Última refeição coletiva no Iana I. Desembarque em Santarém com transfer ao aeroporto.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BARCO -->
+<section class="barco-sec">
+  <div class="barco-hero">
+    <img loading="lazy" src="imgs/img12.webp" alt="Iana I — a embarcação da expedição" class="barco-img">
+    <div class="barco-texto">
+      <span class="label">A embarcação</span>
+      <h2>Iana I — conforto e autenticidade amazônica em harmonia</h2>
+      <p>O Iana I foi preparado para proporcionar a proximidade com o rio e a floresta sem abrir mão do conforto e da privacidade que os nossos passageiros merecem.</p>
+      <div class="barco-specs">
+        <div class="spec"><span class="s-label">Comprimento</span><span class="s-val">31 metros</span></div>
+        <div class="spec"><span class="s-label">Capacidade</span><span class="s-val">16 passageiros</span></div>
+        <div class="spec"><span class="s-label">Cabines beliche</span><span class="s-val">6 duplas</span></div>
+        <div class="spec"><span class="s-label">Cabines master</span><span class="s-val">2 casal</span></div>
+        <div class="spec"><span class="s-label">Banheiro</span><span class="s-val">Privativo em todas</span></div>
+        <div class="spec"><span class="s-label">Climatização</span><span class="s-val">Ar-condicionado</span></div>
+        <div class="spec"><span class="s-label">Refeições</span><span class="s-val">Todas a bordo</span></div>
+        <div class="spec"><span class="s-label">Guia</span><span class="s-val">Em toda a expedição</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="galeria-title">Conheça as instalações a bordo</div>
+  <div class="galeria-barco">
+    <div class="galeria-item"><img loading="lazy" src="imgs/img13.webp" alt="Deck aberto"><div class="galeria-legenda">Deck aberto</div></div>
+    <div class="galeria-item"><img loading="lazy" src="imgs/img14.webp" alt="Salão climatizado"><div class="galeria-legenda">Salão</div></div>
+    <div class="galeria-item"><img loading="lazy" src="imgs/img15.webp" alt="Sala de jantar"><div class="galeria-legenda">Sala de jantar</div></div>
+    <div class="galeria-item"><img loading="lazy" src="imgs/img16.webp" alt="Camarote beliche"><div class="galeria-legenda">Camarote beliche</div></div>
+    <div class="galeria-item"><img loading="lazy" src="imgs/img17.webp" alt="Suíte master"><div class="galeria-legenda">Suíte master</div></div>
+  </div>
+</section>
+
+<!-- INCLUSO -->
+<section class="sec">
+  <span class="label">O que está incluso</span>
+  <h2>A bordo do Iana I</h2>
+  <div class="incluso-grid">
+    <div class="incluso-col">
+      <h3>Incluso</h3>
+      <div class="incluso-item"><span class="check-icon">✓</span>4 noites de hospedagem a bordo</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Todas as refeições durante a navegação</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Wi-Fi a bordo</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Deck aberto para contemplação</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Salão fechado com ar-condicionado</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Guia especializado durante toda a expedição</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Visita e trilha na Comunidade Indígena Cipiá</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Excursão de canoa pelo Igarapé do Topé</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Almoço na Vila Amazônia</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Passeio de canoa na Ilha do Amor e Lago Verde</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Luau com fogueira na praia — Alter do Chão</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Visita à Floresta Nacional do Tapajós com guia local</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Todos os passeios de lancha em Alter do Chão</div>
+      <div class="incluso-item"><span class="check-icon">✓</span>Seguro viagem</div>
+    </div>
+    <div class="incluso-col">
+      <h3>Não incluso</h3>
+      <div class="incluso-item"><span class="x-icon">×</span>Passagens aéreas</div>
+      <div class="incluso-item"><span class="x-icon">×</span>Transfers aeroporto / porto</div>
+      <div class="incluso-item"><span class="x-icon">×</span>Bebidas a bordo</div>
+      <div class="incluso-item"><span class="x-icon">×</span>Gorjetas</div>
+      <div class="incluso-item"><span class="x-icon">×</span>Despesas pessoais</div>
+      <div class="voos-box" style="margin-top:2rem">
+        <p><strong>Sugestão de voos</strong><br>Embarque em Manaus (MAO) · Desembarque em Santarém (STM). Latam e Azul operam os trechos. Reserve com pelo menos 60 dias de antecedência.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="sec-wide bg-gray">
+  <div class="inner">
+    <span class="label">Quem já viveu a Green Boat</span>
+    <h2 style="font-size:26px;font-family:Georgia,serif;font-weight:400;margin-bottom:.5rem">O que dizem quem esteve a bordo</h2>
+    <div class="depo-grid">
+      <div class="depo-card">
+        <p class="depo-texto">"Em Belém, durante a COP30, a Green Boat revelou que as melhores conexões acontecem quando natureza, propósito e líderes globais compartilham o mesmo horizonte."</p>
+        <div class="depo-pessoa">
+          <img loading="lazy" src="imgs/img18.webp" alt="Fernanda Facchini" class="depo-foto">
+          <div><div class="depo-nome">Fernanda Facchini</div><div class="depo-cargo">Head de Mudanças Climáticas · Natura</div></div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <p class="depo-texto">"O Ademar foi um porto seguro durante o nosso trabalho na COP30. Que equipe incrível da Green Boat — nos sentimos em casa com vocês! Hospitalidade nota mil, um trabalho feito com muito amor e cuidado."</p>
+        <div class="depo-pessoa">
+          <div style="width:44px;height:44px;border-radius:50%;background:#2D5A42;border:2px solid #e8e4dc;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:#C9A84C;font-size:14px">JM</div>
+          <div><div class="depo-nome">Joanne Ely Momo</div><div class="depo-cargo">Coordenadora de Logística · Agência Lidee</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOTO FULLWIDTH SUNSET -->
+<img loading="lazy" src="imgs/img02.webp" alt="Iana I ao pôr do sol nas Anavilhanas" class="foto-full" style="height:380px;object-position:center">
+
+<!-- ORIGEM / FUNDADOR -->
+<section class="origem">
+  <div class="inner">
+    <img loading="lazy" src="imgs/img20.webp" alt="Ademar Bueno — Fundador Green Boat" class="origem-img">
+    <div class="origem-texto">
+      <span class="label">Por que a Green Boat existe</span>
+      <h2>A maioria dos roteiros amazônicos foi desenhada para ser fácil de operar — não para ser inesquecível de viver.</h2>
+      <p>Hotel na cidade. Passeio de barco de duas horas. Transfer de volta ao aeroporto.</p>
+      <p>A Green Boat foi criada para fazer o oposto. Expedições que entram de verdade na Amazônia — pelo rio, com tempo, com profundidade. Sem pular o que é difícil de chegar.</p>
+      <p>O roteiro de Manaus a Alter do Chão surgiu de uma pergunta simples: qual seria a expedição ideal para quem quer atravessar a Amazônia pelo rio, de ponta a ponta, sem atalho?</p>
+      <div class="fundador-bio">
+        <div class="name">Ademar Bueno · Fundador, Green Boat</div>
+        <div class="bio">40 anos de Amazônia · Professor FGV-EAESP · Ex-Subsecretário de Empreendedorismo do Estado de São Paulo · Aos 15 anos, viveu em um barco nos rios da Amazônia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="preco-sec">
+  <div style="max-width:660px;margin:0 auto">
+    <span class="label">Reserve sua vaga</span>
+    <h2>Garanta sua vaga na expedição</h2>
+    <p class="sub">09 de setembro de 2026 · Embarque Manaus (MAO) → Desembarque Santarém (STM) · 13 de setembro</p>
+    <div class="cabine-bloco">
+      <div class="cabine-header">
+        <div><div class="cabine-titulo">Cabine dupla com beliche</div><div class="cabine-subtitulo">Banheiro privativo · Ar-condicionado · 6 cabines disponíveis</div></div>
+        <div class="cabine-preco-cheio"><span class="label-cheio">Preço por pessoa</span><span class="val-cheio">R$ 16.700</span></div>
+      </div>
+      <div class="opcoes-pag">
+        <div class="opcao-pag destaque-op">
+          <span class="badge-recomendado">⭐ Mais escolhido</span>
+          <span class="op-label">Online · Link</span>
+          <div class="op-destaque">R$ 4.175 entrada</div>
+          <div class="op-detalhe">+ 6x de R$ 2.088<br>sem juros · Visa/Master</div>
+        </div>
+        <div class="opcao-pag">
+          <span class="op-label" style="margin-top:1.75rem;display:block">Presencial · 10x</span>
+          <div class="op-destaque">10x R$ 1.670</div>
+          <div class="op-detalhe">Sem entrada<br>sem juros · Visa/Master</div>
+        </div>
+        <div class="opcao-pag">
+          <span class="op-label" style="margin-top:1.75rem;display:block">À vista · −7%</span>
+          <div class="op-destaque">R$ 15.531</div>
+          <div class="op-detalhe">Economia R$ 1.169<br>qualquer forma</div>
+        </div>
+      </div>
+    </div>
+    <div class="cabine-bloco">
+      <div class="cabine-header">
+        <div><div class="cabine-titulo">Cabine master — cama de casal</div><div class="cabine-subtitulo">Banheiro privativo · Ar-condicionado · 2 cabines disponíveis</div></div>
+        <div class="cabine-preco-cheio"><span class="label-cheio">Preço por pessoa</span><span class="val-cheio">R$ 17.900</span></div>
+      </div>
+      <div class="opcoes-pag">
+        <div class="opcao-pag destaque-op">
+          <span class="badge-recomendado">⭐ Mais escolhido</span>
+          <span class="op-label">Online · Link</span>
+          <div class="op-destaque">R$ 4.475 entrada</div>
+          <div class="op-detalhe">+ 6x de R$ 2.238<br>sem juros · Visa/Master</div>
+        </div>
+        <div class="opcao-pag">
+          <span class="op-label" style="margin-top:1.75rem;display:block">Presencial · 10x</span>
+          <div class="op-destaque">10x R$ 1.790</div>
+          <div class="op-detalhe">Sem entrada<br>sem juros · Visa/Master</div>
+        </div>
+        <div class="opcao-pag">
+          <span class="op-label" style="margin-top:1.75rem;display:block">À vista · −7%</span>
+          <div class="op-destaque">R$ 16.647</div>
+          <div class="op-detalhe">Economia R$ 1.253<br>qualquer forma</div>
+        </div>
+      </div>
+    </div>
+    <p class="preco-note" style="margin-top:.75rem">Preços por pessoa · Acomodação dupla · Mínimo 10 passageiros para garantia da saída · Máximo 16 vagas</p>
+    <button class="btn-primary" onclick="window.open('https://wa.me/5511998356696','_blank')">Quero minha vaga</button>
+    <button class="btn-outline" onclick="window.open('https://wa.me/5511998356696','_blank')">Falar pelo WhatsApp</button>
+    <div class="garantia-box">
+      <div class="g-title">Sua reserva tem proteção</div>
+      <p>Se a expedição não atingir o mínimo de 10 passageiros confirmados, você recebe 100% do valor pago de volta — sem burocracia.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VISÃO DE FUTURO -->
+<section class="visao-sec">
+  <div class="inner">
+    <span class="label" style="color:#C9A84C">Como você vai se sentir no último dia</span>
+    <h2>É domingo, 13 de setembro.</h2>
+    <div style="margin:2rem 0;border-radius:12px;overflow:hidden;max-height:480px">
+      <img loading="lazy" src="imgs/img21.webp" style="width:100%;object-fit:cover;object-position:center top;max-height:480px;display:block" alt="Deck do Iana I — Rio Amazonas">
+    </div>
+    <p>O barco está ancorado em Santarém. A última refeição coletiva acabou de ser servida no deck do Iana I.</p>
+    <p>Você passou 5 dias navegando pelos três maiores rios da Amazônia. Entrou em uma aldeia indígena. Almoçou em uma comunidade ribeirinha no meio do Amazonas. Caminhou entre Samaúmas centenárias na Floresta Nacional do Tapajós. Viu dois encontros de águas — ao vivo, do barco. Dormiu com o rio embaixo.</p>
+    <p>Alter do Chão ficou para trás. Mas você não chegou lá de avião — chegou pelo Tapajós, pelo rio, do jeito que faz sentido.</p>
+    <p class="destaque">Essa é a diferença que fica. Não nas fotos. Na memória.</p>
+  </div>
+</section>
+
+<!-- OBJEÇÕES -->
+<section class="sec-wide bg-gray">
+  <div class="inner">
+    <span class="label">Perguntas antes de reservar</span>
+    <h2 style="font-size:26px;font-family:Georgia,serif;font-weight:400;margin-bottom:1.5rem">Respostas para o que aparece antes de decidir</h2>
+    <div class="obj-item"><div class="obj-q">"Nunca fiz uma expedição fluvial. Vou me adaptar?"</div><p class="obj-a">O Iana I foi preparado para quem quer profundidade — não para quem quer aventura extrema. Cabines com ar-condicionado, banheiro privativo, refeições a bordo e guia especializado do começo ao fim. Você está no rio, não sobrevivendo a ele.</p></div>
+    <div class="obj-item"><div class="obj-q">"E se o roteiro mudar por causa do clima?"</div><p class="obj-a">A ordem das atividades pode ser ajustada em função de condições climáticas ou nível dos rios. O que não muda é a expedição — todas as experiências do roteiro são mantidas, reorganizadas quando necessário para garantir segurança e qualidade.</p></div>
+    <div class="obj-item"><div class="obj-q">"Como chego a Manaus e como volto de Santarém?"</div><p class="obj-a">Você embarca em Manaus (MAO) e desembarca em Santarém (STM). Latam e Azul operam os trechos com conexões a partir das principais cidades brasileiras. Recomendamos reservar com pelo menos 60 dias de antecedência.</p></div>
+    <div class="obj-item"><div class="obj-q">"O que preciso levar?"</div><p class="obj-a">Roupas leves e de banho, protetor solar, repelente, chapéu ou boné, tênis confortável para trilha e medicamentos de uso contínuo. Nada de equipamento especial.</p></div>
+    <div class="obj-item"><div class="obj-q">"A saída é garantida?"</div><p class="obj-a">A expedição é confirmada com mínimo de 10 passageiros. Com 16 vagas no total, a margem é pequena — e as reservas definem a saída.</p></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec">
+  <span class="label">Perguntas frequentes</span>
+  <h2>FAQ</h2>
+  <div style="margin-top:1rem">
+    <div class="faq-item"><div class="faq-q">Qual é a data exata da expedição?</div><div class="faq-a">Embarque em Manaus no dia 9 de setembro de 2026. Desembarque em Santarém no dia 13 de setembro de 2026.</div></div>
+    <div class="faq-item"><div class="faq-q">Quantas pessoas viajam juntas?</div><div class="faq-a">O Iana I tem capacidade para 16 passageiros. A expedição sai com mínimo de 10 confirmados.</div></div>
+    <div class="faq-item"><div class="faq-q">As refeições estão todas inclusas?</div><div class="faq-a">Todas as refeições a bordo estão inclusas. Almoços em comunidades ribeirinhas durante os passeios também estão inclusos. Bebidas a bordo não estão inclusas.</div></div>
+    <div class="faq-item"><div class="faq-q">Há Wi-Fi a bordo?</div><div class="faq-a">Sim, o Iana I tem Wi-Fi a bordo.</div></div>
+    <div class="faq-item"><div class="faq-q">Posso ir sozinho?</div><div class="faq-a">Sim. A expedição recebe passageiros individuais. Cabines duplas podem ser compartilhadas com outro passageiro do grupo, conforme disponibilidade.</div></div>
+    <div class="faq-item"><div class="faq-q">Com quanto tempo devo comprar as passagens aéreas?</div><div class="faq-a">Recomendamos no mínimo 60 dias de antecedência. Latam e Azul operam Manaus e Santarém com conexões a partir das principais cidades brasileiras.</div></div>
+    <div class="faq-item"><div class="faq-q">Como funciona a reserva?</div><div class="faq-a">Entre em contato pelo WhatsApp ou e-mail. Nossa equipe envia as condições de pagamento, link de reserva e prazo de confirmação.</div></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<section class="footer-sec">
+  <h3>Green Boat — Expedições Amazônicas</h3>
+  <p class="foot-sub">Saída única · 09 de setembro de 2026 · Manaus → Alter do Chão</p>
+  <button class="btn-primary" onclick="window.open('https://wa.me/5511998356696','_blank')">Quero minha vaga</button>
+  <button class="btn-outline" onclick="window.open('https://wa.me/5511998356696','_blank')">Falar pelo WhatsApp</button>
+  <div class="footer-links">
+    <a href="https://greenboat.com.br">greenboat.com.br</a>
+    <a href="mailto:contato@greenboat.com.br">contato@greenboat.com.br</a>
+    <a href="https://instagram.com/greenboatbr">@greenboatbr</a>
+  </div>
+  <div class="footer-meta">
+    Mínimo de 10 passageiros para garantia da saída · Máximo 16 vagas · Sujeito a disponibilidade<br>
+    A ordem das atividades pode sofrer alterações em função de condições climáticas ou nível dos rios.<br>
+    Green Boat Amazônia · Empresa registrada no Cadastur · Ministério do Turismo
+  </div>
+</section>
+
+<button class="whatsapp-float" title="Falar pelo WhatsApp" onclick="window.open('https://wa.me/5511998356696','_blank')">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</button>
+
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(function(q) {
+  q.addEventListener('click', function() {
+    var item = q.parentElement;
+    var isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// Scroll reveal com IntersectionObserver
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('section:not(.hero), .roteiro-dia, .depo-item, .faq-item').forEach(function(el) {
+  el.classList.add('reveal');
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

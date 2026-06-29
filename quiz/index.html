@@ -1,0 +1,679 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diagnóstico de Rota Estratégica - Green Boat 2026</title>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"></noscript>
+    <style>
+        :root {
+            /* Paleta Green Boat */
+            --bg-primary: #0d1a0b;
+            --bg-secondary: #ede6d3;
+            --text-primary: #ffffff;
+            --text-secondary: #c9c6b8;
+            --accent-primary: #c9a43b;
+            --accent-hover: #b08a2e;
+            --border-light: rgba(205, 198, 183, 0.14);
+            --progress-bg: #d0d0d0;
+            --progress-fill: #c9a43b;
+            
+            /* Tipografia */
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Lora', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+        }
+
+        .progress-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--progress-bg);
+            z-index: 1000;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--progress-fill);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        #quiz-wrapper {
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+            animation: screenFadeIn 0.35s ease forwards;
+        }
+        @keyframes screenFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: none; }
+        }
+        /* Transição entre perguntas */
+        .q-fade-out { opacity: 0; transform: translateX(16px); transition: opacity .18s ease, transform .18s ease; }
+        .q-fade-in  { opacity: 0; transform: translateX(-16px); }
+        .q-visible  { opacity: 1; transform: none; transition: opacity .25s ease, transform .25s ease; }
+
+        /* Tipografia */
+        .headline-intro {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 32px;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        .question-text {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* Opções */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .option-btn {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            color: #0d1a0b;
+            padding: 16px 18px;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background-color: #f5f1e8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .option-btn:active {
+            transform: translateY(0);
+        }
+
+        .option-emoji {
+            font-size: 20px;
+            min-width: 28px;
+        }
+
+        .option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        /* Formulário */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            padding: 14px 16px;
+            border-radius: 4px;
+            color: #0d1a0b;
+            font-family: var(--font-body);
+            font-size: 16px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(201, 164, 59, 0.1);
+        }
+
+        /* Botões */
+        .btn-primary {
+            width: 100%;
+            background-color: var(--accent-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 16px 20px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(201, 164, 59, 0.2);
+        }
+
+        /* Split Container */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .split-box {
+            background-color: rgba(201, 164, 59, 0.08);
+            border: 1px solid var(--border-light);
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .split-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .split-item {
+            margin-bottom: 8px;
+        }
+
+        .split-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Indicadores */
+        .ind-container {
+            background-color: rgba(201, 164, 59, 0.08);
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+        }
+
+        .ind-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+        }
+
+        .ind-bar {
+            height: 6px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .ind-fill {
+            height: 100%;
+            background-color: var(--accent-primary);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .ind-bar:last-of-type {
+            margin-bottom: 0;
+        }
+
+        /* Sticky CTA */
+        .sticky-cta-box {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, var(--bg-primary) 80%, transparent);
+            padding: 20px;
+            text-align: center;
+            display: none;
+            z-index: 999;
+        }
+
+        .sticky-cta-box.active {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .sticky-cta-box .btn-primary {
+            margin-top: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            #quiz-wrapper {
+                max-width: 100%;
+            }
+
+            .headline-intro {
+                font-size: 24px;
+                margin-bottom: 24px;
+            }
+
+            .question-text {
+                font-size: 22px;
+                margin-bottom: 16px;
+            }
+
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PROGRESSO SUPERIOR -->
+    <div class="progress-header" id="progress-container" style="display: none;">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="container">
+        <div id="quiz-wrapper">
+            
+            <!-- TELA: PERGUNTAS DINÂMICAS -->
+            <div class="screen active" id="scr-question">
+                <div class="headline-intro" id="headline-intro" style="display: none;">Se a sua próxima viagem internacional parece apenas mais do mesmo, faça este teste de rota</div>
+                <div id="q-counter" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6b7a6b;margin-bottom:.5rem;font-family:var(--font-body)"></div>
+                <div class="question-text" id="question-text">Carregando pergunta...</div>
+                <div class="options-grid" id="options-box"></div>
+            </div>
+
+            <!-- TELA: CAPTURA DE LEAD -->
+            <div class="screen" id="scr-capture">
+                <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 16px; text-align: center; color: var(--text-primary);">Diagnóstico Gerado</h2>
+                <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.6; margin-bottom: 24px; text-align: center; color: var(--text-secondary);">Informe seus contatos para liberar o acesso à sua análise de perspectiva.</p>
+                
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="lead-name" class="form-input" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label>WhatsApp Corporativo</label>
+                    <input type="tel" id="lead-phone" class="form-input" placeholder="(11) 99999-0000">
+                </div>
+                
+                <p id="form-error" style="color:#ff6b6b;font-size:13px;margin-bottom:12px;display:none;text-align:center"></p>
+                <button class="btn-primary" onclick="submitLead()">Liberar Diagnóstico</button>
+            </div>
+
+            <!-- TELA: PITCH FINAL COMPLETO -->
+            <div class="screen" id="scr-pitch">
+                <!-- BLOCO 1: PERSONALIZAÇÃO -->
+                <div style="margin-bottom: 28px;">
+                    <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: var(--text-secondary);">
+                        <span id="user-name-pitch" style="font-weight: 700; color: var(--text-primary);">Viajante</span>, com base em cada resposta que você forneceu ao longo deste teste, o seu perfil de viajante foi mapeado com sucesso.
+                    </p>
+                    <p style="font-family: var(--font-body); font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-top: 12px;">
+                        Os dados apontam que você faz parte de um grupo seleto de pessoas que já carimbaram o passaporte nos destinos mais conhecidos do mundo, mas que começaram a esbarrar em um teto invisível: <strong>a previsibilidade do turismo tradicional</strong>. O diagnóstico mostra que o que você busca agora não é apenas mais um hotel de luxo, mas uma quebra de padrão com isolamento e privacidade absoluta.
+                    </p>
+                </div>
+
+                <!-- BLOCO 2: ANTES E DEPOIS -->
+                <div style="margin-bottom: 28px;">
+                    <p style="font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px;">Mudar a geografia superficial não resolve o cansaço estrutural da rotina. Veja o contraste:</p>
+                    <div class="split-container">
+                        <div class="split-box" style="background-color: rgba(255, 107, 107, 0.08); border-color: rgba(255, 107, 107, 0.3);">
+                            <div class="split-title" style="color: #ff6b6b;">🔴 ANTES</div>
+                            <div style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+                                <div style="margin-bottom: 8px;">→ Acumular carimbos previsíveis e voltar igual</div>
+                                <div style="margin-bottom: 8px;">→ Hotéis engessados e roteiros clichês</div>
+                                <div style="margin-bottom: 8px;">→ O descanso que some logo no primeiro dia útil</div>
+                                <div>→ Destinos superlotados e sem privacidade</div>
+                            </div>
+                        </div>
+                        <div class="split-box" style="background-color: rgba(201, 164, 59, 0.08); border-color: rgba(201, 164, 59, 0.3);">
+                            <div class="split-title" style="color: var(--accent-primary);">🟢 DEPOIS</div>
+                            <div style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+                                <div style="margin-bottom: 8px;">→ Viver o inédito nas praias mais isoladas</div>
+                                <div style="margin-bottom: 8px;">→ Navegação boutique com suítes de alto padrão</div>
+                                <div style="margin-bottom: 8px;">→ Ganho real de clareza mental e perspectiva</div>
+                                <div>→ Praias de areia branca e águas puras sem ninguém</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO 3: INDICADORES -->
+                <div style="margin-bottom: 28px; background-color: rgba(201, 164, 59, 0.08); padding: 18px; border-radius: 6px; border: 1px solid var(--border-light);">
+                    <p style="font-family: var(--font-body); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-primary); margin-bottom: 14px;">Indicadores Estratégicos do Seu Perfil</p>
+                    <div class="ind-container" style="background-color: transparent; border: none; padding: 0;">
+                        <div class="ind-row"><span style="color: var(--text-secondary);">Saturação de Destinos Tradicionais</span><span style="color: #ff6b6b; font-weight: 700;">ALTA (91%) 🔴</span></div>
+                        <div class="ind-bar"><div class="ind-fill" style="width: 91%; background-color: #ff6b6b;"></div></div>
+                        
+                        <div class="ind-row" style="margin-top: 14px;"><span style="color: var(--text-secondary);">Durabilidade Real de Alívio Atual</span><span style="color: #ff6b6b; font-weight: 700;">BAIXA (14%) 🔴</span></div>
+                        <div class="ind-bar"><div class="ind-fill" style="width: 14%; background-color: #ff6b6b;"></div></div>
+
+                        <div class="ind-row" style="margin-top: 14px;"><span style="color: var(--text-secondary);">Alinhamento com Alter do Chão</span><span style="color: var(--accent-primary); font-weight: 700;">MÁXIMO (97%) 🟢</span></div>
+                        <div class="ind-bar"><div class="ind-fill" style="width: 97%; background-color: var(--accent-primary);"></div></div>
+                    </div>
+                </div>
+
+                <!-- BLOCO 4: AUTORIDADE -->
+                <div style="margin-bottom: 28px; background-color: rgba(201, 164, 59, 0.06); padding: 18px; border-radius: 6px; border: 1px solid var(--border-light);">
+                    <p style="font-family: var(--font-body); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent-primary); margin-bottom: 12px;">Quem Desenha Essa Rota</p>
+                    <img src="imgs/img01.webp" style="width: 100%; height: auto; border-radius: 6px; margin-bottom: 14px; object-fit: cover;" alt="Ademar Bueno na Amazônia">
+                    <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: var(--text-secondary);">
+                        Meu nome é <strong>Ademar Bueno</strong>. Há quatro décadas eu atuo na curadoria de grandes expedições na Amazônia profunda. Com formação pela FGV, MBA em Harvard e atuação direta com grandes lideranças corporativas, eu me especializei em construir experiências de imersão que servem como verdadeiros pontos de virada para quem toma decisões de alto impacto. Eu não desenho passeios; eu abro as portas de territórios intocados com o máximo de sofisticação privada.
+                    </p>
+                </div>
+
+                <!-- BLOCO 5: MECANISMO -->
+                <div style="margin-bottom: 28px;">
+                    <p style="font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px;">Como funciona a dinâmica de imersão a bordo do Green Boat:</p>
+                    <img src="imgs/img02.webp" style="width: 100%; height: auto; border-radius: 6px; margin-bottom: 14px; object-fit: cover;" alt="Expedição Green Boat ao pôr do sol">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="padding: 12px; background-color: rgba(201, 164, 59, 0.06); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+                            <p style="font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">Passo 1 → Desconexão Controlada</p>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);">Você deixa os cenários previsíveis para trás e entra em uma rota restrita pelas águas cristalinas e praias de areia branca do Rio Tapajós.</p>
+                        </div>
+                        <div style="padding: 12px; background-color: rgba(201, 164, 59, 0.06); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+                            <p style="font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">Passo 2 → Estrutura Boutique Privada</p>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);">Dias de navegação em um barco de apenas 8 suítes impecáveis, projetado estritamente para garantir privacidade, alta gastronomia e conforto absoluto.</p>
+                        </div>
+                        <div style="padding: 12px; background-color: rgba(201, 164, 59, 0.06); border-left: 3px solid var(--accent-primary); border-radius: 4px;">
+                            <p style="font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--accent-primary); margin-bottom: 4px;">Passo 3 → Resgate de Perspectiva</p>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);">Vivências exclusivas na floresta e contato com a pureza de um ecossistema sem estradas, desenhado para resetar o piloto automático da mente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO 6: O QUE ESPERAR -->
+                <div style="margin-bottom: 28px;">
+                    <p style="font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px;">Ao ser selecionado para a próxima rota exclusiva em Alter do Chão, você acessa:</p>
+                    <img src="imgs/img03.webp" style="width: 100%; height: auto; border-radius: 6px; margin-bottom: 14px; object-fit: cover;" alt="Isolamento e natureza em Alter do Chão">
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; min-width: 24px; flex-shrink: 0;">✅</span>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);"><strong>Navegação Premium Privada:</strong> Dias a bordo de um barco boutique com suítes exclusivas.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; min-width: 24px; flex-shrink: 0;">🏖️</span>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);"><strong>Isolamento de Elite:</strong> Acesso a praias paradisíacas e canais de rios intocados pelo turismo de massa.</p>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: flex-start;">
+                            <span style="font-size: 18px; min-width: 24px; flex-shrink: 0;">🛶</span>
+                            <p style="font-family: var(--font-body); font-size: 13px; color: var(--text-secondary);"><strong>Curadoria de Rota:</strong> Roteiro interpretativo sênior desenhado para garantir o máximo de privacidade.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BLOCO 7: ESCASSEZ -->
+                <div style="margin-bottom: 28px; background-color: rgba(201, 164, 59, 0.1); padding: 18px; border-radius: 6px; border: 1px solid var(--accent-primary);">
+                    <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: var(--text-primary);">
+                        O Green Boat opera com saídas rigidamente restritas ao longo de <strong>2026</strong>. Devido ao nosso compromisso com o impacto ambiental mínimo e com a exclusividade total da experiência, a capacidade do barco é limitada a <strong>apenas 16 vagas por expedição</strong>. As vagas não são abertas ao público geral; elas são destinadas apenas a perfis selecionados que buscam o verdadeiro ineditismo.
+                    </p>
+                </div>
+
+                <!-- BLOCO 8: PROCESSO SELETIVO -->
+                <div style="margin-bottom: 28px;">
+                    <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: var(--text-secondary);">
+                        O envio dos seus dados através deste quiz garante a prioridade do seu perfil na nossa lista de triagem interna. Nossa equipe de curadoria entrará em contato para entender se o seu momento atual está alinhado com o propósito e o nível de isolamento que a rota de Alter do Chão oferece.
+                    </p>
+                </div>
+
+                <!-- BLOCO 9: CTA FINAL -->
+                <div style="text-align: center; padding: 18px; background-color: rgba(201, 164, 59, 0.08); border-radius: 6px; border: 1px solid var(--border-light); margin-bottom: 80px;">
+                    <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 12px;">
+                        <span id="user-name-pitch-final" style="font-weight: 700; color: var(--text-primary);">Viajante</span>, o piloto automático vai tentar fazer você planejar a mesma viagem internacional previsível de sempre. Mas a clareza que você quer exige um cenário inédito.
+                    </p>
+                    <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.7; color: var(--text-secondary);">
+                        O seu diagnóstico de rota foi validado e o leito ideal para Alter do Chão está disponível. O próximo passo está na sua mão.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY CTA -->
+    <div class="sticky-cta-box" id="sticky-cta-box">
+        <button class="btn-primary" onclick="goToTarget()" style="margin: 0;">🧭 Acessar Roteiro e Iniciar Aplicação</button>
+    </div>
+
+    <script>
+        // DADOS DAS PERGUNTAS
+        const questions = [
+            {
+                text: "Você possui planos ativos de realizar uma viagem internacional nos próximos meses?",
+                options: ["✅ Sim, com certeza", "❌ Não, estou definindo"]
+            },
+            {
+                text: "Qual a sua faixa etária?",
+                options: ["💼 18 a 29 anos", "👑 30 a 45 anos", "✨ 46 a 60 anos", "🎩 Acima de 60 anos"]
+            },
+            {
+                text: "Qual estilo de viagem internacional mais atrai você hoje?",
+                options: ["🏰 Cultural e Histórico", "🍷 Gastronomia e Conforto", "🏔️ Natureza e Isolamento", "🏙️ Grandes Metrópoles"]
+            },
+            {
+                text: "Você costuma voltar de um grande destino internacional sentindo que precisa de 'férias das férias' para descansar?",
+                options: ["🔵 Sim, quase sempre volto exausto", "🟢 Às vezes, dependendo do roteiro"]
+            },
+            {
+                text: "Após retornar de uma viagem internacional, em quanto tempo a rotina engole o descanso?",
+                options: ["⏳ Logo no primeiro dia útil", "🗓️ Na primeira semana de trabalho", "💼 No máximo em 15 dias"]
+            },
+            {
+                text: "Ao planejar uma jornada focada em isolamento ou natureza, qual é o seu maior receio?",
+                options: ["🏨 Roteiros clichês e engessados", "🚌 Falta de exclusividade e luxo", "🦟 Medo de perrengue ou desconforto"]
+            },
+            {
+                text: "Se você pudesse desenhar a sua próxima viagem ideal hoje, qual fator seria inegociável?",
+                options: ["✨ Total ineditismo e surpresa", "👑 Exclusividade absoluta e conforto", "🌿 Isolamento profundo na natureza"]
+            },
+            {
+                text: "Imagine uma jornada de desconexão total. O que você mais gostaria de trazer de volta na bagagem?",
+                options: ["🎯 Clareza total para novas decisões", "🔋 Energia renovada para liderar", "👁️ Uma nova perspectiva de vida"]
+            },
+            {
+                text: "O que mais te atrai em um destino que pouquíssimas pessoas no mundo têm acesso real?",
+                options: ["💎 O privilégio da exclusividade", "🗺️ Histórias que ninguém pode contar", "🤫 Distância total do turismo de massa"]
+            },
+            {
+                text: "Se você encontrasse um destino que unisse isolamento profundo e conforto absoluto, teria interesse em conhecer?",
+                options: ["✅ Sim, com certeza", "❌ Não, prefiro o meio urbano"]
+            },
+            {
+                text: "Você concorda que, para desligar o piloto automático da rotina, é necessário se colocar em um ambiente totalmente novo?",
+                options: ["✅ Sim, concordo totalmente", "❌ Não, acho que o comum resolve"]
+            },
+            {
+                text: "Qual o seu nível de comprometimento em investir 6 dias da sua agenda para viver uma jornada de perspectiva real?",
+                options: ["✨ Estou pronto para o inédito", "💼 Preciso conciliar com a agenda", "🧭 Quero entender como funciona"]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userResponses = [];
+
+        // Animação entre perguntas
+        function renderQuestion(isFirst) {
+            var introEl    = document.getElementById('headline-intro');
+            var questionEl = document.getElementById('question-text');
+            var optionsBox = document.getElementById('options-box');
+            var counterEl  = document.getElementById('q-counter');
+
+            if (introEl) introEl.style.display = currentQuestionIndex === 0 ? 'block' : 'none';
+
+            var currentQuestion = questions[currentQuestionIndex];
+            var progressPct = (currentQuestionIndex / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = progressPct + '%';
+
+            if (counterEl) counterEl.textContent = 'Pergunta ' + (currentQuestionIndex + 1) + ' de ' + questions.length;
+
+            function renderContent() {
+                questionEl.textContent = currentQuestion.text;
+                optionsBox.innerHTML = '';
+                currentQuestion.options.forEach(function(option) {
+                    var emojiMatch = option.match(/^([^\s]+)\s+(.+)$/);
+                    var emoji = emojiMatch ? emojiMatch[1] : '';
+                    var text  = emojiMatch ? emojiMatch[2] : option;
+                    var btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = '<div class="option-emoji">' + emoji + '</div><div class="option-text">' + text + '</div>';
+                    btn.onclick = function() { nextStep(option); };
+                    optionsBox.appendChild(btn);
+                });
+
+                if (!isFirst) {
+                    optionsBox.classList.add('q-fade-in');
+                    questionEl.classList.add('q-fade-in');
+                    requestAnimationFrame(function() {
+                        requestAnimationFrame(function() {
+                            optionsBox.classList.remove('q-fade-in');
+                            optionsBox.classList.add('q-visible');
+                            questionEl.classList.remove('q-fade-in');
+                            questionEl.classList.add('q-visible');
+                            setTimeout(function() {
+                                optionsBox.classList.remove('q-visible');
+                                questionEl.classList.remove('q-visible');
+                            }, 300);
+                        });
+                    });
+                }
+            }
+
+            if (!isFirst) {
+                optionsBox.classList.add('q-fade-out');
+                questionEl.classList.add('q-fade-out');
+                setTimeout(function() {
+                    optionsBox.classList.remove('q-fade-out');
+                    questionEl.classList.remove('q-fade-out');
+                    renderContent();
+                }, 190);
+            } else {
+                renderContent();
+            }
+        }
+
+        function nextStep(selectedOption) {
+            userResponses.push({ q: currentQuestionIndex, answer: selectedOption });
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion(false);
+            } else {
+                document.getElementById('progress-fill').style.width = '100%';
+                document.getElementById('scr-question').classList.remove('active');
+                document.getElementById('progress-container').style.display = 'none';
+                document.getElementById('scr-capture').classList.add('active');
+            }
+        }
+
+        // Mascara de telefone BR
+        document.addEventListener('DOMContentLoaded', function() {
+            var phoneInput = document.getElementById('lead-phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    var v = e.target.value.replace(/\D/g, '');
+                    if (v.length > 11) v = v.slice(0, 11);
+                    if (v.length > 7)      v = '(' + v.slice(0,2) + ') ' + v.slice(2,7) + '-' + v.slice(7);
+                    else if (v.length > 2) v = '(' + v.slice(0,2) + ') ' + v.slice(2);
+                    else if (v.length > 0) v = '(' + v;
+                    e.target.value = v;
+                });
+            }
+        });
+
+        function submitLead() {
+            var name  = document.getElementById('lead-name').value.trim();
+            var phone = document.getElementById('lead-phone').value.trim();
+            var errorEl = document.getElementById('form-error');
+
+            if (!name || !phone) {
+                errorEl.textContent = 'Preencha todos os campos para liberar seu diagnostico.';
+                errorEl.style.display = 'block';
+                return;
+            }
+            errorEl.style.display = 'none';
+
+            document.getElementById('user-name-pitch').innerText = name;
+            document.getElementById('user-name-pitch-final').innerText = name;
+
+            document.getElementById('scr-capture').classList.remove('active');
+            document.getElementById('scr-pitch').classList.add('active');
+            document.getElementById('sticky-cta-box').classList.add('active');
+        }
+
+        function goToTarget() {
+            window.location.href = 'https://www.greenboat.com.br/alter';
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('progress-container').style.display = 'block';
+            renderQuestion(true);
+        });
+
+    </script>
+</body>
+</html>
