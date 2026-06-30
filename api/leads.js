@@ -2,11 +2,14 @@ module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
+  const repo = (process.env.GITHUB_REPO || '').replace(/^﻿/, '').trim();
+  const token = (process.env.GITHUB_TOKEN || '').replace(/^﻿/, '').trim();
+
   const listRes = await fetch(
-    `https://api.github.com/repos/${process.env.GITHUB_REPO}/contents/data/leads`,
+    `https://api.github.com/repos/${repo}/contents/data/leads`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         'User-Agent': 'green-boat-leads',
         'X-GitHub-Api-Version': '2022-11-28',
       },

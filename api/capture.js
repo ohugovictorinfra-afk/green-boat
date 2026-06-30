@@ -20,8 +20,8 @@ module.exports = async function handler(req, res) {
     source: req.headers.referer || 'direct',
   };
 
-  const token = process.env.GITHUB_TOKEN;
-  const repo  = process.env.GITHUB_REPO;
+  const token = (process.env.GITHUB_TOKEN || '').replace(/^﻿/, '').trim();
+  const repo  = (process.env.GITHUB_REPO  || '').replace(/^﻿/, '').trim();
 
   // Debug: verificar se as vars chegaram (sem expor o token)
   console.log('GITHUB_REPO:', repo);
